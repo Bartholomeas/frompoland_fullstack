@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,12 +9,17 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { InputControlled } from "@/components/form/input-controlled";
 
-
-import { createTransaction, CreateTransactionResponse } from "../api/create-transaction";
-import { CreateTransactionPayload, createTransactionSchema } from "../schemas/create-transaction.schema";
 import { useFetch } from "@/hooks/useFetch";
 
-export const ExchangeForm = () => {
+import { getApproximateExchangedAmount } from "../utils";
+import { createTransaction } from "../api/create-transaction";
+import { CreateTransactionPayload, createTransactionSchema } from "../schemas/create-transaction.schema";
+
+interface ExchangeFormProps {
+  exchangeRate: number | undefined;
+}
+
+export const ExchangeForm = ({ exchangeRate }: ExchangeFormProps) => {
   const form = useForm<CreateTransactionPayload>({
     resolver: zodResolver(createTransactionSchema),
     defaultValues: {
@@ -24,7 +29,11 @@ export const ExchangeForm = () => {
     },
   });
 
-  const { mutate, isLoading, data } = useFetch();
+  const approximateExchangedAmount = useMemo(() => {
+    return getApproximateExchangedAmount(form.watch('amount'), exchangeRate);
+  }, [form.watch('amount'), exchangeRate]);
+
+  const { mutate, isLoading } = useFetch();
 
   const clearValues = useCallback(() => {
     form.reset();
@@ -62,6 +71,9 @@ export const ExchangeForm = () => {
             Dokonaj transakcji
           </Button>
         </div>
+        {approximateExchangedAmount ? <span className="text-sm text-foreground-muted">
+          ~ {`${form.watch('amount')} ${form.watch('from')} => ${approximateExchangedAmount} ${form.watch('to')}`}
+        </span> : null}
       </form>
     </Form>
   );

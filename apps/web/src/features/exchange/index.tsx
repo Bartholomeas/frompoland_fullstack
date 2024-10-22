@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import { catchError } from "@/utils/catchError";
 
@@ -22,8 +22,12 @@ export const Exchange = async () => {
         to="PLN"
         exchangeRate={data?.exchange_rate}
       />
-      <ExchangeForm
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ExchangeForm
+          exchangeRate={data?.exchange_rate}
+        />
+      </Suspense>
+      {error ? <span className="text-sm text-destructive">{error.message}</span> : null}
     </Card>
   );
 };
