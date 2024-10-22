@@ -1,4 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpException,
+  InternalServerErrorException,
+  Post,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { TransactionService } from './transaction.service';
@@ -10,7 +16,14 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Post()
-  createTransaction(@Body() createTransactionDto: CreateTransactionDto) {
-    return this.transactionService.createTransaction(createTransactionDto);
+  async createTransaction(@Body() createTransactionDto: CreateTransactionDto) {
+    try {
+      return await this.transactionService.createTransaction(
+        createTransactionDto,
+      );
+    } catch (err) {
+      if (err instanceof HttpException) throw err;
+      throw new InternalServerErrorException();
+    }
   }
 }
