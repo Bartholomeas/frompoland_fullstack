@@ -17,6 +17,15 @@ export class TransactionService {
     private readonly transactionRepository: Repository<Transaction>,
   ) {}
 
+  async getLatestTransactions() {
+    return await this.transactionRepository.find({
+      order: {
+        createdAt: 'DESC',
+      },
+      take: 10,
+    });
+  }
+
   async createTransaction({
     from,
     to,

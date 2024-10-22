@@ -1,15 +1,8 @@
 import { TRANSACTION_URL } from '@/misc/constants';
 import { CreateTransactionPayload, createTransactionSchema } from '../schemas/create-transaction.schema';
-import { CurrencyEnum } from '@/misc/schemas';
+import { ExchangeTransaction } from '../types/exchange-transaction.type';
 
-export interface CreateTransactionResponse {
-  from: CurrencyEnum;
-  to: CurrencyEnum;
-  baseAmount: number;
-  exchangedAmount: number;
-  exchangeRate: number;
-  createdAt: number;
-}
+export interface CreateTransactionResponse extends ExchangeTransaction {}
 
 export const createTransaction = async (payload: CreateTransactionPayload): Promise<CreateTransactionResponse> => {
   const parsedBody = createTransactionSchema.parse(payload);
