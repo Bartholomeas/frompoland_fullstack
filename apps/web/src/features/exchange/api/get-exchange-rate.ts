@@ -1,11 +1,19 @@
 import { EXCHANGE_RATE_URL } from '@/misc/constants';
+import { CurrencyEnum } from '@/misc/schemas';
 
 interface ExchangeRateResponse {
   exchange_rate: number;
 }
 
-export const getExchangeRate = async (): Promise<ExchangeRateResponse> => {
-  console.log('Fifka2', EXCHANGE_RATE_URL);
+interface GetExchangeRatePayload {
+  from: CurrencyEnum;
+  to: CurrencyEnum;
+}
+
+export const getExchangeRate = async (payload: GetExchangeRatePayload): Promise<ExchangeRateResponse> => {
+  // Simulation of API call params
+  console.log(payload);
+
   const res = await fetch(EXCHANGE_RATE_URL, {
     headers: {
       'Content-Type': 'application/json',
