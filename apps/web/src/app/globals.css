@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: #e6e3e1;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -36,7 +36,13 @@
   * {
     @apply border-border;
   }
+
+  html,
   body {
-    @apply font-sans bg-background text-foreground;
+    @apply h-full;
+  }
+
+  body {
+    @apply relative flex flex-col font-sans bg-background text-foreground;
   }
 }
