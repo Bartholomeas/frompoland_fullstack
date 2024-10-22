@@ -4,8 +4,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { firstValueFrom } from 'rxjs';
+
 import { ExchangeRateCacheKey } from './exchange-rate.enum';
 import { ExchangeRateDto } from './dto/exchange-rate.dto';
+import { ExchangeRateResponse } from './interfaces/exchange-rate-response.interface';
 
 @Injectable()
 export class ExchangeRateService {
@@ -21,17 +23,21 @@ export class ExchangeRateService {
   ) {}
 
   // Add DTO with from and to; to simulate real app flow (as it probably would need to handle multiple configurations of currencies).
-  async getExchangeRate({ from, to }: ExchangeRateDto) {
+  async getExchangeRate({
+    from,
+    to,
+  }: ExchangeRateDto): Promise<ExchangeRateResponse> {
     // As it will be used in another module like a service (not endpoint) i need to handle cache 'by hand', as interceptors are applicable to controllers only.
-    const cachedExchangeRate = await this.cacheManager.get(
-      `${ExchangeRateCacheKey.EXCHANGE_RATE}-${from}-${to}`,
-    );
+    const cachedExchangeRate =
+      await this.cacheManager.get<ExchangeRateResponse>(
+        `${ExchangeRateCacheKey.EXCHANGE_RATE}-${from}-${to}`,
+      );
 
     if (cachedExchangeRate) return cachedExchangeRate;
 
     // There would be passing of from/to params (if api would support these params)
     const { data } = await firstValueFrom(
-      this.httpService.get(this.exchangeApiUrl, {
+      this.httpService.get<ExchangeRateResponse>(this.exchangeApiUrl, {
         headers: {
           'x-api-key': this.exchangeApiKey,
         },
