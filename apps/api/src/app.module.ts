@@ -15,6 +15,7 @@ import { Transaction } from './transaction/entities/transaction.entity';
       type: 'better-sqlite3',
       database: 'db/sql.db',
       synchronize: true,
+      // dropSchema: true,
       entities: [Transaction],
     }),
     ExchangeRateModule,

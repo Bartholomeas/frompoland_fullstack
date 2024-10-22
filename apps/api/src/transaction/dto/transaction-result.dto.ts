@@ -36,6 +36,16 @@ export class TransactionResultDto {
   @ApiProperty({ type: Number })
   @IsNumber()
   @IsPositive()
+  baseAmount: number;
+
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  @IsPositive()
+  exchangedAmount: number;
+
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  @IsPositive()
   exchangeRate: number;
 
   @ApiProperty({ type: Number })

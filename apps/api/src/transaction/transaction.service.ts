@@ -34,7 +34,8 @@ export class TransactionService {
     const result = new TransactionResultDto({
       from,
       to,
-      amount: exchangeAmount,
+      baseAmount: amount,
+      exchangedAmount: exchangeAmount,
       exchangeRate: exchange_rate,
       createdAt: Date.now(),
     });
