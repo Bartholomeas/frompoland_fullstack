@@ -7,12 +7,7 @@ import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    CacheModule.registerAsync({
-      isGlobal: true,
-      useFactory: () => ({
-        ttl: 60000,
-      }),
-    }),
+    CacheModule.register({ isGlobal: true, ttl: 60 }),
     ExchangeRateModule,
   ],
 })

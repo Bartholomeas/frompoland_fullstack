@@ -1,9 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
-import { ExchangeRateService } from './exchange-rate.service';
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-@Controller('exchange-rate')
+import { HttpCacheInterceptor } from 'src/common/interceptors/http-cache.interceptor';
+import { ExchangeRateService } from './exchange-rate.service';
+
 @ApiTags('Exchange Rate')
+@Controller('exchange-rate')
+@UseInterceptors(HttpCacheInterceptor)
 export class ExchangeRateController {
   constructor(private readonly exchangeRateService: ExchangeRateService) {}
 
