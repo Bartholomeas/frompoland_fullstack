@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,9 +24,11 @@ export const ExchangeForm = () => {
     },
   });
 
-  const { mutate, isLoading } = useFetch({
-    queryFn: createTransaction(form.getValues()),
-  });
+  const { mutate, isLoading, data } = useFetch();
+
+  const clearValues = useCallback(() => {
+    form.reset();
+  }, [form]);
 
   const onSubmit = async (payload: CreateTransactionPayload) => {
     mutate(createTransaction(payload));
@@ -35,15 +37,23 @@ export const ExchangeForm = () => {
   return (
     <Form {...form}>
       <form
+        noValidate
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4">
         <InputControlled
           name="amount"
-          label="Kwota do wymiany" />
+          label="Kwota do wymiany"
+          type="number"
+          min={0}
+        />
+
         <div className="flex items-center gap-2">
 
-          <Button variant={'outline'}>
-            Przelicz
+          <Button
+            variant={'outline'}
+            onClick={clearValues}
+          >
+            Wyczyść
           </Button>
           <Button
             aria-disabled={isLoading}

@@ -30,9 +30,19 @@ export const InputControlled = ({
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>, field: ControllerRenderProps<FieldValues, string>) => {
-      return props.type === "number"
-        ? field?.onChange?.(+e.target.value)
-        : field?.onChange?.(e.target.value);
+      if (props.type === "number") {
+        const value = e.target.value;
+        if (value === "" || value === "-") {
+          field?.onChange?.(value);
+        } else {
+          const numValue = parseFloat(value);
+          if (!isNaN(numValue)) {
+            field?.onChange?.(numValue);
+          }
+        }
+      } else {
+        field?.onChange?.(e.target.value);
+      }
     },
     [],
   );
