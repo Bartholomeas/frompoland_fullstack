@@ -1,10 +1,14 @@
+import { Exchange } from "@/features/exchange";
 
-import clsx from "clsx";
 
-export default function Home() {
+const Home = async () => {
+
+
   return (
-    <div className={clsx('container')}>
-      xdd
-    </div>
+    <main className="flex items-center justify-center h-full container">
+      <Exchange />
+    </main>
   );
-}
+};
+
+export default Home;
