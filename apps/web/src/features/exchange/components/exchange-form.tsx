@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useMemo } from 'react';
+import { revalidateTag } from "next/cache";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +14,9 @@ import { useFetch } from "@/hooks/useFetch";
 
 import { getApproximateExchangedAmount } from "../utils";
 import { createTransaction } from "../api/create-transaction";
+import { GET_LATEST_TRANSACTIONS_TAG } from "../api/get-latest-transactions";
 import { CreateTransactionPayload, createTransactionSchema } from "../schemas/create-transaction.schema";
+import { revalidateSpecifiedTag } from "@/utils/revalidateSpecifiedTag";
 
 interface ExchangeFormProps {
   exchangeRate: number | undefined;
@@ -40,7 +43,7 @@ export const ExchangeForm = ({ exchangeRate }: ExchangeFormProps) => {
   }, [form]);
 
   const onSubmit = async (payload: CreateTransactionPayload) => {
-    mutate(createTransaction(payload));
+    mutate(createTransaction(payload)).then(() => revalidateSpecifiedTag(GET_LATEST_TRANSACTIONS_TAG));
   };
 
   return (
@@ -71,7 +74,7 @@ export const ExchangeForm = ({ exchangeRate }: ExchangeFormProps) => {
             Dokonaj transakcji
           </Button>
         </div>
-        {approximateExchangedAmount ? <span className="text-sm text-foreground-muted">
+        {approximateExchangedAmount ? <span className="text-sm text-muted-foreground">
           ~ {`${form.watch('amount')} ${form.watch('from')} => ${approximateExchangedAmount} ${form.watch('to')}`}
         </span> : null}
       </form>

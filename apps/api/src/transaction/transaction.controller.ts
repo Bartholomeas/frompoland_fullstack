@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   InternalServerErrorException,
   Post,
@@ -14,6 +15,16 @@ import { CreateTransactionDto } from './dto/create-transaction.dto';
 @ApiTags('Transaction')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
+
+  @Get('/latest')
+  async getLatestTransactions() {
+    try {
+      return await this.transactionService.getLatestTransactions();
+    } catch (err) {
+      if (err instanceof HttpException) throw err;
+      throw new InternalServerErrorException();
+    }
+  }
 
   @Post()
   async createTransaction(@Body() createTransactionDto: CreateTransactionDto) {
